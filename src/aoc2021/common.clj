@@ -9,3 +9,6 @@
        str/split-lines
        )
   )
+
+(defn string->int [input]
+  (Integer/parseInt input))
