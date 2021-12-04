@@ -6,10 +6,10 @@
   (common/parse-input "resources/input-day2.txt"))
 
 
-(defn parse-movement [move]
-  (let [separated (str/split move `#" ")
+(defn parse-movement [movement]
+  (let [separated (str/split movement #" ")
         amount (common/string->int (second separated))
-        command (symbol (first separated))]
+        command (first separated)]
     [command amount]))
 
 (defn forward [amount position]
@@ -34,26 +34,38 @@
 (comment
   ((resolve (symbol "print")) 1 2 3))
 
-(defn move [movement-string position]
-  (let [movement (parse-movement movement-string)
-        command (first movement)
+(defn move [movement position]
+  (let [command (first movement)
         amount (second movement)]
-    ((resolve command) amount position))
+    (case command
+      "forward" (forward amount position)
+      "down" (down amount position)
+      "up" (up amount position)
+      position)
+    )
   )
 
+(defn travel [movements position]
+  (if (= (count movements) 0)
+    position
+    (let [parsed-movement (parse-movement (first movements))
+          new-position (move parsed-movement position)]
+      (travel (rest movements) new-position)
+      ))
+  )
 (deftest day2-task1
   (testing "reads input"
     (is (= (count input) 1000)))
   (testing "parse movement"
-    (is (= (parse-movement "forward 6") [(symbol "forward") 6])))
+    (is (= (parse-movement "forward 6") ["forward" 6])))
   (testing "movements"
     (is (= (forward 1 [0 0]) [1 0]))
     (is (= (up 1 [0 2]) [0 1]))
     (is (= (up 1 [0 0]) [0 0]))
     (is (= (down 1 [0 0]) [0 1])))
   (testing "execute a move"
-    (is (= (move "forward 1" [0 0]) [1 0]))
-    ;(is (= (move "blub 1" [0 0]) [0 0]))
+    (is (= (move ["forward" 1] [0 0]) [1 0]))
+    (is (= (move "blub 1" [0 0]) [0 0]))
     )
   (testing "example movement"
     (let [example ["forward 5"
@@ -61,8 +73,16 @@
                    "forward 8"
                    "up 3"
                    "down 8"
-                   "forward 2"]])
-    ())
+                   "forward 2"]]
+      (is (= (travel example [0 0]) [15 10]))
+      (is (=
+            (* (first (travel example [0 0])) (second (travel example [0 0])))
+            150)))
+    )
   (testing "solution"
-    (is (= 0 0)))
+    (let [end-position (travel input [0 0])]
+      (is (= end-position [2007 747]))
+      (is (= (* (first end-position) (second end-position)) 1499229))
+      )
+    )
   )
