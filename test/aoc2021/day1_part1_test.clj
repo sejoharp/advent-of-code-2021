@@ -11,12 +11,6 @@
     0
     ))
 
-(defn string->int [input]
-  (Integer/parseInt input))
-
-(defn convert-to-ints [measures]
-  (map string->int measures))
-
 (defn count-increases-recur [measures measure-before, increase-count]
   (if (= (count measures) 0)
     increase-count
@@ -26,7 +20,7 @@
     ))
 
 (defn count-increases [measures]
-  (let [int-measures (convert-to-ints measures)
+  (let [int-measures (c/convert-to-ints measures)
         measures-rest (rest int-measures)
         measures-first (first int-measures)]
     (-> measures-rest

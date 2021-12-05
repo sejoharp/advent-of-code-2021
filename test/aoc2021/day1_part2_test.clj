@@ -11,12 +11,6 @@
     0
     ))
 
-(defn string->int [input]
-  (Integer/parseInt input))
-
-(defn convert-to-ints [measures]
-  (map string->int measures))
-
 (defn calculate-distance [measures]
   (let [measure-1st (first measures)
         measure-2nd (second measures)
@@ -32,7 +26,7 @@
     ))
 
 (defn count-increases [measures]
-  (let [int-measures (convert-to-ints measures)
+  (let [int-measures (c/convert-to-ints measures)
         measures-rest (rest int-measures)
         distance-before (calculate-distance int-measures)]
     (-> measures-rest
