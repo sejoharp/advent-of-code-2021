@@ -95,7 +95,7 @@
           gamma-rate (bin->int gamma-rate-binary)
           epsilon-rate (bin->int epsilon-rate-binary)
           power-consumption (* gamma-rate epsilon-rate)]
-      (is (= power-consumption 0))
+      (is (= power-consumption 1458194))
       )
     )
   )
